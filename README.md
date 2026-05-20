@@ -1,29 +1,21 @@
-# CPE 159 — Real-Time Operating System Kernel
+# Otago Exercise Program — Companion Web Application
 
-A multi-phase implementation of a real-time operating system (RTOS) kernel built in C, Assembly, and C++, developed as coursework for CPE 159 (Real-Time Operating Systems Principles and Design).
+A web-based companion portal built to support a smartphone application developed for the **Otago Exercise Program (OEP)**, a clinically validated fall-prevention exercise regimen for older adults. This project was created as part of a senior design capstone.
 
-The project was built incrementally across several phases, each adding a new layer of OS functionality — from basic process management to inter-process communication and synchronization.
-
----
-
-## Overview
-
-This repository contains the full progression of a custom RTOS kernel developed from scratch. Each phase introduced new systems programming concepts and extended the kernel's capabilities.
+The site serves as the backend interface between clinicians and their patients, allowing clinicians to monitor patient progress and patients to log their exercise activity through the paired mobile app.
 
 ---
 
-## Phases
+## Features
 
-| Phase | Description |
-|---|---|
-| Phase 4 | Initial kernel setup and process initialization |
-| Phase 5 | Process scheduling — context switching and the ready queue |
-| Phase 6 | System calls and process state management |
-| Phase 7 | Inter-process communication (IPC) — message passing |
-| Phase 8 | Synchronization primitives — semaphores and blocking |
-| Phase 9 | Final integration and system hardening |
-
-> Individual phase directories (e.g. `phase7-FOX`, `phase8-FOX`) contain personal implementations; shared/combined versions are in the base phase folders.
+- **Role-based authentication** — Users are routed to separate dashboards based on their role (Clinician or Patient) upon login.
+- **Firebase Authentication** — Secure email/password login with session persistence. Auth state is monitored in real time.
+- **Firebase Realtime Database** — Patient and clinician data is read from and written to a Firebase database, enabling live data sync across devices.
+- **Clinician portal** — Clinicians can view and manage their current clients.
+- **Patient portal** — Patients are directed to their personal home page linked to their assigned clinician.
+- **Account creation flows** — Separate registration pages for new users and new clinicians (`newUser.html`, `newClinician.html`).
+- **CSV parsing** — PapaParse is integrated for any CSV-based data import/export.
+- **Responsive design** — Mobile-friendly layout designed for use alongside a smartphone application.
 
 ---
 
@@ -31,22 +23,13 @@ This repository contains the full progression of a custom RTOS kernel developed 
 
 | Technology | Purpose |
 |---|---|
-| C | Core kernel implementation |
-| Assembly (x86) | Low-level context switching and CPU register management |
-| C++ | Supporting utilities |
-| Makefile | Build system for compiling multi-file kernel modules |
-
----
-
-## Key Concepts Demonstrated
-
-- **Process Control Blocks (PCBs)** — Managing process state, priority, and metadata.
-- **Context Switching** — Saving and restoring CPU registers in Assembly to switch between processes.
-- **Process Scheduling** — Implementing a ready queue and dispatcher for multi-process execution.
-- **System Calls** — Designing a kernel-level API for user processes to request OS services.
-- **Inter-Process Communication (IPC)** — Message queues enabling communication between running processes.
-- **Semaphores** — Implementing counting semaphores for process synchronization and mutual exclusion.
-- **Makefiles** — Structured build system to compile and link multi-module kernel code.
+| HTML / CSS | Page structure and styling |
+| JavaScript (Vanilla) | Application logic and Firebase integration |
+| jQuery 3.3.1 | DOM manipulation and event handling |
+| Firebase (v5.5.6) | Authentication and Realtime Database |
+| Moment.js | Date/time formatting |
+| PapaParse | CSV parsing |
+| GitHub Pages | Hosting |
 
 ---
 
@@ -54,34 +37,36 @@ This repository contains the full progression of a custom RTOS kernel developed 
 
 ```
 /
-├── PhaseTest/       # Integration test environment
-├── phase5/          # Scheduling and context switching
-├── phase6/          # System calls (multiple implementations)
-├── phase6V2/
-├── phase7/          # IPC — message passing
-├── phase7-FOX/      # Personal IPC implementation
-├── phase7V3/
-├── phase8/          # Semaphores and synchronization
-├── phase8-FOX/      # Personal semaphore implementation
-├── phase8-JR/
-├── phase9/          # Final integrated kernel
-├── Demo-lab.dli     # Lab demo configuration
-└── output.txt       # Sample program output
+├── index.html          # Login page — entry point for all users
+├── functions.js        # Shared Firebase utility functions (init, DB refs, helpers)
+├── newUser.html        # New patient registration page
+├── newClinician.html   # New clinician registration page
+├── physician/          # Clinician-facing views (client management)
+└── user/               # Patient-facing views (exercise tracking home)
 ```
 
 ---
 
-## Building
+## How It Works
 
-Each phase directory contains its own `Makefile`. To build a specific phase:
-
-```bash
-cd phase9
-make
-```
+1. A user visits the site and is presented with a login modal.
+2. Firebase Authentication verifies credentials and establishes a session.
+3. The app checks the user's `isPhysician` flag in the Firebase Realtime Database.
+4. Based on the role:
+   - **Physicians** are redirected to `physician/currentClients.html`
+   - **Patients** are redirected to `user/userHome.html`
+5. New accounts can be created via the "New User" or "New Clinician" buttons on the login screen.
 
 ---
 
 ## Background
 
-CPE 159 is a systems programming course focused on the design and implementation of real-time operating systems. Students build a functional RTOS kernel incrementally, learning how modern operating systems manage processes, memory, and hardware at a low level. The course emphasizes hands-on systems programming in C and Assembly.
+The **Otago Exercise Program** is a home-based strength and balance exercise program developed by the University of Otago (New Zealand) and shown in clinical trials to significantly reduce falls in older adults. This web portal was built as the clinician-facing companion to a mobile app that guides patients through the exercise program and tracks their progress.
+
+This project was developed collaboratively as part of a senior design capstone course.
+
+---
+
+## Live Site
+
+Hosted via GitHub Pages: [https://foxsom.github.io](https://foxsom.github.io)
